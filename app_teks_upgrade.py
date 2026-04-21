@@ -1,49 +1,50 @@
 import streamlit as st
 import google.generativeai as genai
+from gtts import gTTS
+import os
+import tempfile
 
 # =========================
-# CONFIG PAGE
+# CONFIG
 # =========================
 st.set_page_config(
-    page_title="AI Generator",
+    page_title="AI Chat",
     page_icon="🤖",
-    layout="centered"
+    layout="wide"
 )
 
 # =========================
-# CUSTOM CSS (BIAR CAKEP)
+# CSS (WARNA SALEM LEMBUT)
 # =========================
 st.markdown("""
 <style>
 body {
-    background-color: #f5f7fb;
+    background-color: #fff1f2;
 }
 
-.chat-container {
-    display: flex;
-    flex-direction: column;
+.main {
+    background-color: #fff1f2;
 }
 
 .user-bubble {
-    background-color: #dbeafe;
+    background-color: #fecdd3;
     padding: 10px 15px;
     border-radius: 15px;
     margin: 5px 0;
     max-width: 70%;
-    align-self: flex-end;
+    margin-left: auto;
 }
 
 .ai-bubble {
-    background-color: #e5e7eb;
+    background-color: #ffe4e6;
     padding: 10px 15px;
     border-radius: 15px;
     margin: 5px 0;
     max-width: 70%;
-    align-self: flex-start;
 }
 
-.input-box {
-    border-radius: 10px;
+.sidebar .sidebar-content {
+    background-color: #ffe4e6;
 }
 
 </style>
@@ -52,111 +53,124 @@ body {
 # =========================
 # TITLE
 # =========================
-st.title("🤖 My Public AI Generator")
-st.caption("AI sederhana dengan tampilan seperti chat")
+st.title("🤖 AI Chat Modern")
+st.caption("Dengan Memory + Voice + Sidebar History")
 
 # =========================
-# API KEY CONFIG
+# API KEY
 # =========================
 try:
     if "MY_API_KEY" in st.secrets:
         api_key = st.secrets["MY_API_KEY"]
     else:
-        api_key = st.sidebar.text_input("Masukkan API Key:", type="password")
+        api_key = st.sidebar.text_input("API Key", type="password")
 
     if api_key:
         genai.configure(api_key=api_key)
-    else:
-        st.warning("Masukkan API Key dulu ya")
-except Exception as e:
-    st.error(f"Error: {e}")
+except:
+    st.warning("Masukkan API Key dulu ya")
 
 # =========================
-# SESSION STATE (CHAT HISTORY)
+# SESSION STATE
 # =========================
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
 # =========================
-# TAMPILKAN CHAT
+# SIDEBAR (CHAT HISTORY)
 # =========================
-st.markdown('<div class="chat-container">', unsafe_allow_html=True)
+st.sidebar.title("💬 Chat History")
 
+for i, chat in enumerate(st.session_state.chat_history):
+    role = "🧑" if chat["role"] == "user" else "🤖"
+    st.sidebar.write(f"{role} {chat['message'][:40]}...")
+
+if st.sidebar.button("🗑️ Clear Chat"):
+    st.session_state.chat_history = []
+    st.rerun()
+
+# =========================
+# TAMPILKAN CHAT UTAMA
+# =========================
 for chat in st.session_state.chat_history:
     if chat["role"] == "user":
         st.markdown(f'<div class="user-bubble">{chat["message"]}</div>', unsafe_allow_html=True)
     else:
         st.markdown(f'<div class="ai-bubble">{chat["message"]}</div>', unsafe_allow_html=True)
 
-st.markdown('</div>', unsafe_allow_html=True)
-
 # =========================
-# INPUT USER
+# INPUT
 # =========================
 MAX_CHAR = 500
 
-prompt_user = st.text_area(
-    "Ketik pesan:",
-    height=100,
-    placeholder="Tulis sesuatu...",
-)
-
+prompt_user = st.text_area("Ketik pesan kamu:", height=100)
 char_count = len(prompt_user)
 
 st.caption(f"{char_count}/{MAX_CHAR} karakter")
 
 # =========================
-# VALIDASI PANJANG TEKS
+# FUNCTION: TEXT TO SPEECH
 # =========================
-if char_count > MAX_CHAR:
-    st.warning("Teks terlalu panjang! Maksimal 500 karakter.")
+def text_to_speech(text):
+    tts = gTTS(text=text, lang='id')
+    tmp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
+    tts.save(tmp_file.name)
+    return tmp_file.name
 
 # =========================
 # BUTTON
 # =========================
 if st.button("Kirim"):
     if not prompt_user:
-        st.warning("Tulis dulu pesannya")
+        st.warning("Isi dulu ya")
     elif char_count > MAX_CHAR:
-        st.error("Pesan terlalu panjang")
+        st.error("Terlalu panjang!")
     else:
         try:
-            # simpan user message
+            # simpan user
             st.session_state.chat_history.append({
                 "role": "user",
                 "message": prompt_user
             })
 
-            # cari model
+            # =========================
+            # MEMORY AI (AMBIL HISTORY)
+            # =========================
+            context = ""
+            for chat in st.session_state.chat_history:
+                if chat["role"] == "user":
+                    context += f"User: {chat['message']}\n"
+                else:
+                    context += f"AI: {chat['message']}\n"
+
+            # =========================
+            # MODEL
+            # =========================
             available_models = [
                 m.name for m in genai.list_models()
                 if 'generateContent' in m.supported_generation_methods
             ]
 
-            if available_models:
-                model = genai.GenerativeModel(available_models[0])
+            model = genai.GenerativeModel(available_models[0])
 
-                with st.spinner("AI sedang berpikir..."):
-                    response = model.generate_content(prompt_user)
+            with st.spinner("AI sedang berpikir..."):
+                response = model.generate_content(context)
 
-                ai_reply = response.text
+            ai_reply = response.text
 
-                # simpan AI response
-                st.session_state.chat_history.append({
-                    "role": "ai",
-                    "message": ai_reply
-                })
+            # simpan AI
+            st.session_state.chat_history.append({
+                "role": "ai",
+                "message": ai_reply
+            })
 
-                st.rerun()
-            else:
-                st.error("Tidak ada model tersedia")
+            # =========================
+            # TEXT TO SPEECH
+            # =========================
+            audio_file = text_to_speech(ai_reply)
+            st.audio(audio_file)
+
+            st.rerun()
 
         except Exception as e:
             st.error(f"Error: {e}")
-
-# =========================
-# CLEAR CHAT
-# =========================
-if st.button("🗑️ Hapus Chat"):
-    st.session_state.chat_history = []
-    st.rerun()
