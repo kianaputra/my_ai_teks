@@ -53,7 +53,7 @@ body {
 # =========================
 # TITLE
 # =========================
-st.title("🤖 AI Chat Modern")
+st.title("🤖 AI Chat Sekolah Ora Et Labora")
 st.caption("Dengan Memory + Voice + Sidebar History")
 
 # =========================
