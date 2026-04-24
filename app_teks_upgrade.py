@@ -8,7 +8,7 @@ import tempfile
 # CONFIG
 # =========================
 st.set_page_config(
-    page_title="AI Chat",
+    page_title="AI Sekolah ORA et LABORA",
     page_icon="🤖",
     layout="wide"
 )
