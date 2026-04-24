@@ -1,3 +1,6 @@
 streamlit
-google-generativeai
-gTTS
+langchain
+openai
+faiss-cpu
+pypdf
+python-docx
