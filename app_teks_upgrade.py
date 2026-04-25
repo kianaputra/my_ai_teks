@@ -13,7 +13,7 @@ import docx
 # =========================
 st.set_page_config(
     page_title="AI Sekolah ORA et LABORA",
-    page_icon="🤖",
+    page_icon="oel.png",
     layout="wide"
 )
 
