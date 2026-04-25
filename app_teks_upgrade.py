@@ -191,7 +191,7 @@ Jika jawaban tidak ada di data, jawab:
             # =========================
             # MODEL
             # =========================
-            model = genai.GenerativeModel("gemini-1.5-flash")
+            model = genai.GenerativeModel("gemini-1.5-flash-latest")
 
             with st.spinner("AI sedang berpikir..."):
                 response = model.generate_content(context)
