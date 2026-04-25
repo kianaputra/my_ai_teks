@@ -171,14 +171,16 @@ if st.button("Kirim"):
             # =========================
             # CONTEXT AI
             # =========================
-            context = f"""
+           context = f"""
 Kamu adalah AI resmi Sekolah ORA et LABORA.
 
-Jawab pertanyaan HANYA berdasarkan data berikut:
-{data_sekolah}
+Gunakan aturan berikut:
+1. Jika pertanyaan berkaitan dengan sekolah, jawab berdasarkan data di bawah ini.
+2. Jika tidak ada di data, kamu BOLEH menjawab dari pengetahuan umum.
+3. Utamakan jawaban yang benar, jelas, dan mudah dipahami.
 
-Jika jawaban tidak ada di data, jawab:
-"Data tidak tersedia di sistem sekolah."
+Data sekolah:
+{data_sekolah}
 """
 
             # tambah history
