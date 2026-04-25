@@ -47,12 +47,14 @@ body { background-color: #fff1f2; }
 # =========================
 # TITLE
 # =========================
-col1, col2, col3 = st.columns([1,2,1])
+col1, col2 = st.columns([1,5])
+
+with col1:
+    st.image("oel.png", width=60)
 
 with col2:
-    st.image("oel.png", width=150)
+    st.title("AI Chat Sekolah ORA et LABORA")
 
-st.title("AI Chat Sekolah ORA et LABORA")
 st.caption("Dengan Memory + Voice + Data Sekolah")
 
 
