@@ -47,10 +47,11 @@ body { background-color: #fff1f2; }
 # =========================
 # TITLE
 # =========================
-# LOGO
-st.image("oel.png", width=120)
+col1, col2, col3 = st.columns([1,2,1])
 
-# TITLE
+with col2:
+    st.image("oel.png", width=150)
+
 st.title("AI Chat Sekolah ORA et LABORA")
 st.caption("Dengan Memory + Voice + Data Sekolah")
 
