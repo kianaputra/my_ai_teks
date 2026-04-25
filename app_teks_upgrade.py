@@ -47,8 +47,13 @@ body { background-color: #fff1f2; }
 # =========================
 # TITLE
 # =========================
-st.title(" 🤖 AI Chat Sekolah ORA et LABORA")
-st.caption("🤖 Dengan Memory + Voice + Data Sekolah")
+# LOGO
+st.image("oel.png", width=120)
+
+# TITLE
+st.title("AI Chat Sekolah ORA et LABORA")
+st.caption("Dengan Memory + Voice + Data Sekolah")
+
 
 # =========================
 # API KEY
