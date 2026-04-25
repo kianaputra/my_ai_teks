@@ -171,7 +171,7 @@ if st.button("Kirim"):
             # =========================
             # CONTEXT AI
             # =========================
-           context = f"""
+             context = f"""
 Kamu adalah AI resmi Sekolah ORA et LABORA.
 
 Gunakan aturan berikut:
