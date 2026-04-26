@@ -157,22 +157,23 @@ st.caption(f"{char_count}/{MAX_CHAR} karakter")
 # BUTTON
 # =========================
 if st.button("Kirim"):
-    if not prompt_user:
+
+    # ⛔ TAMBAHKAN DI SINI
+    if not prompt_user.strip():
         st.warning("Isi dulu ya")
-    elif char_count > MAX_CHAR:
+        st.stop()
+
+    if char_count > MAX_CHAR:
         st.error("Terlalu panjang!")
-    else:
-        try:
-            # simpan user
-            st.session_state.chat_history.append({
-                "role": "user",
-                "message": prompt_user
-            })
+        st.stop()
+
+    try:
+
 
             # =========================
             # AMBIL DATA SEKOLAH
             # =========================
-            data_sekolah = load_all_data()
+            data_sekolah = load_all_data()[:3000]
 
             # =========================
             # CONTEXT AI
@@ -180,17 +181,13 @@ if st.button("Kirim"):
             context = f"""
             Kamu adalah AI resmi Sekolah ORA et LABORA.
 
-            Gunakan aturan berikut:
-            1. Jika pertanyaan berkaitan dengan sekolah, jawab berdasarkan data di bawah ini.
-            2. Jika tidak ada di data, kamu BOLEH menjawab dari pengetahuan umum.
-            3. Utamakan jawaban yang benar, jelas, dan mudah dipahami.
-
+           
             Data sekolah:
             {data_sekolah}
 """
 
             # tambah history
-            for chat in st.session_state.chat_history:
+            for chat in st.session_state.chat_history [-2:]:
                 if chat["role"] == "user":
                     context += f"User: {chat['message']}\n"
                 else:
@@ -204,7 +201,8 @@ if st.button("Kirim"):
                 if "generateContent" in m.supported_generation_methods
             ]
 
-            model = genai.GenerativeModel(models[0])
+            model = genai.GenerativeModel("gemini-1.5-flash")
+
 
 
             with st.spinner("AI sedang berpikir..."):
