@@ -158,7 +158,6 @@ st.caption(f"{char_count}/{MAX_CHAR} karakter")
 # =========================
 if st.button("Kirim"):
 
-    # ⛔ TAMBAHKAN DI SINI
     if not prompt_user.strip():
         st.warning("Isi dulu ya")
         st.stop()
