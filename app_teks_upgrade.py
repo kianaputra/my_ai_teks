@@ -193,7 +193,7 @@ Data sekolah:
         # =========================
         # MODEL (FIX HEMAT)
         # =========================
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-2.5-flash")
 
         with st.spinner("AI sedang berpikir..."):
             response = model.generate_content(context)
