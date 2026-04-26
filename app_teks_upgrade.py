@@ -4,7 +4,6 @@ from gtts import gTTS
 import os
 import tempfile
 
-# TAMBAHAN UNTUK BACA FILE
 from pypdf import PdfReader
 import docx
 
@@ -48,30 +47,28 @@ body { background-color: #fff1f2; }
 # TITLE
 # =========================
 col1, col2, col3 = st.columns([1,2,1])
-
 with col2:
     st.image("oel.png", width=150)
 
 st.title("AI Chat Sekolah ORA et LABORA")
 st.caption("Dengan Memory + Voice + Data Sekolah")
 
-
 # =========================
 # API KEY
 # =========================
-try:
-    if "MY_API_KEY" in st.secrets:
-        api_key = st.secrets["MY_API_KEY"]
-    else:
-        api_key = st.sidebar.text_input("API Key", type="password")
+if "MY_API_KEY" in st.secrets:
+    api_key = st.secrets["MY_API_KEY"]
+else:
+    api_key = st.sidebar.text_input("API Key", type="password")
 
-    if api_key:
-        genai.configure(api_key=api_key)
-except:
+if api_key:
+    genai.configure(api_key=api_key)
+else:
     st.warning("Masukkan API Key dulu ya")
+    st.stop()
 
 # =========================
-# SESSION STATE
+# SESSION
 # =========================
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
@@ -90,7 +87,7 @@ if st.sidebar.button("🗑️ Clear Chat"):
     st.rerun()
 
 # =========================
-# FUNCTION: LOAD DATA
+# LOAD DATA
 # =========================
 @st.cache_data
 def load_all_data(folder_path="data"):
@@ -103,12 +100,10 @@ def load_all_data(folder_path="data"):
         file_path = os.path.join(folder_path, filename)
 
         try:
-            # TXT
             if filename.endswith(".txt"):
                 with open(file_path, "r", encoding="utf-8") as f:
                     all_text += f.read() + "\n\n"
 
-            # PDF
             elif filename.endswith(".pdf"):
                 reader = PdfReader(file_path)
                 for page in reader.pages:
@@ -116,7 +111,6 @@ def load_all_data(folder_path="data"):
                     if text:
                         all_text += text + "\n\n"
 
-            # DOCX
             elif filename.endswith(".docx"):
                 doc = docx.Document(file_path)
                 for para in doc.paragraphs:
@@ -128,7 +122,7 @@ def load_all_data(folder_path="data"):
     return all_text
 
 # =========================
-# FUNCTION: TEXT TO SPEECH
+# TEXT TO SPEECH
 # =========================
 def text_to_speech(text):
     tts = gTTS(text=text, lang='id')
@@ -166,62 +160,60 @@ if st.button("Kirim"):
         st.error("Terlalu panjang!")
         st.stop()
 
-        try:
+    try:
+        # simpan user
+        st.session_state.chat_history.append({
+            "role": "user",
+            "message": prompt_user
+        })
 
+        # =========================
+        # DATA SEKOLAH (dibatasi)
+        # =========================
+        data_sekolah = load_all_data()[:3000]
 
-            # =========================
-            # AMBIL DATA SEKOLAH
-            # =========================
-            data_sekolah = load_all_data()[:3000]
+        # =========================
+        # CONTEXT
+        # =========================
+        context = f"""
+Kamu adalah AI resmi Sekolah ORA et LABORA.
+Jawab dengan jelas dan singkat.
 
-            # =========================
-            # CONTEXT AI
-            # =========================
-            context = f"""
-            Kamu adalah AI resmi Sekolah ORA et LABORA.
-
-           
-            Data sekolah:
-            {data_sekolah}
+Data sekolah:
+{data_sekolah}
 """
 
-            # tambah history
-            for chat in st.session_state.chat_history [-2:]:
-                if chat["role"] == "user":
-                    context += f"User: {chat['message']}\n"
-                else:
-                    context += f"AI: {chat['message']}\n"
+        # history (2 terakhir biar ringan)
+        for chat in st.session_state.chat_history[-2:]:
+            if chat["role"] == "user":
+                context += f"User: {chat['message']}\n"
+            else:
+                context += f"AI: {chat['message']}\n"
 
-            # =========================
-            # MODEL
-            # =========================
-            models = [
-                m.name for m in genai.list_models()
-                if "generateContent" in m.supported_generation_methods
-            ]
+        # =========================
+        # MODEL (FIX HEMAT)
+        # =========================
+        model = genai.GenerativeModel("gemini-1.5-flash")
 
-            model = genai.GenerativeModel("gemini-1.5-flash")
+        with st.spinner("AI sedang berpikir..."):
+            response = model.generate_content(context)
 
+        ai_reply = getattr(response, "text", "Tidak ada respon dari AI")
 
+        # tampilkan langsung (biar tidak hilang)
+        st.markdown(f'<div class="ai-bubble">{ai_reply}</div>', unsafe_allow_html=True)
 
-            with st.spinner("AI sedang berpikir..."):
-                response = model.generate_content(context)
+        # simpan AI
+        st.session_state.chat_history.append({
+            "role": "ai",
+            "message": ai_reply
+        })
 
-            ai_reply = response.text
+        # VOICE
+        audio_file = text_to_speech(ai_reply)
+        st.audio(audio_file)
 
-            # simpan AI
-            st.session_state.chat_history.append({
-                "role": "ai",
-                "message": ai_reply
-            })
+        st.rerun()
 
-            # =========================
-            # VOICE
-            # =========================
-            audio_file = text_to_speech(ai_reply)
-            st.audio(audio_file)
-
-            st.rerun()
-
-        except Exception as e:
-            st.error(f"Error: {e}")
+    except Exception as e:
+        st.error(f"Error: {e}")
