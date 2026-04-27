@@ -148,13 +148,6 @@ data_gambar = {
     "jadwal sekolah": "data/jadwal.png"
 }
 
-# =========================
-# INPUT
-# =========================
-MAX_CHAR = 500
-prompt_user = st.text_area("ketik apa yang mau kamu tanya:", height=100)
-char_count = len(prompt_user)
-st.caption(f"{char_count}/{MAX_CHAR} karakter")
 
 # =========================
 # LOGIC (INI BAGIAN PENTING)
