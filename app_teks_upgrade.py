@@ -140,6 +140,12 @@ def text_to_speech(text):
 # =========================
 # TAMPILKAN CHAT
 # =========================
+# =========================
+# TAMPILKAN GAMBAR TERAKHIR
+# =========================
+for path, caption in st.session_state.last_images:
+    st.image(path, caption=caption)
+
 for chat in st.session_state.chat_history:
     if chat["role"] == "user":
         st.markdown(f'<div class="user-bubble">{chat["message"]}</div>', unsafe_allow_html=True)
