@@ -146,6 +146,29 @@ prompt_user = st.text_area("ketik apa yang mau kamu tanya:", height=100)
 char_count = len(prompt_user)
 st.caption(f"{char_count}/{MAX_CHAR} karakter")
 
+
+#=============================
+# DATA GAMBAR
+#=============================
+
+data_gambar = {
+    "brosur psb 2026-2027": "data/gambar1.png",
+    "jadwal sekolah": "data/jadwal.png"
+}
+
+user_input = st.text_input("Cari info...")
+
+if user_input:
+    found = False
+    for keyword, path in data_gambar.items():
+        if keyword in user_input.lower():
+            st.image(path, caption=keyword)
+            found = True
+
+    if not found:
+        st.write("Data tidak ditemukan")
+
+
 # =========================
 # BUTTON
 # =========================
