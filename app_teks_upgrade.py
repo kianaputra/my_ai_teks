@@ -146,6 +146,9 @@ for chat in st.session_state.chat_history:
     else:
         st.markdown(f'<div class="ai-bubble">{chat["message"]}</div>', unsafe_allow_html=True)
 
+if "last_images" not in st.session_state:
+    st.session_state.last_images = []
+
 # =========================
 # INPUT
 # =========================
@@ -177,9 +180,12 @@ if st.button("Kirim"):
         # =========================
         # CEK GAMBAR DULU 🔥
         # =========================
+        st.session_state.last_images = []
+
         for keyword, path in data_gambar.items():
             if keyword in prompt_user.lower():
-                st.image(path, caption=keyword)
+                 st.session_state.last_images.append((path, keyword))
+
 
         # =========================
         # DATA SEKOLAH
