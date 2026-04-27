@@ -22,7 +22,6 @@ st.set_page_config(
 st.markdown("""
 <style>
 body { background-color: #fff1f2; }
-.main { background-color: #fff1f2; }
 
 .user-bubble {
     background-color: #fecdd3;
@@ -51,7 +50,7 @@ st.title("AI Chat Sekolah ORA et LABORA")
 st.caption("Dengan Memory + Voice + Data Sekolah")
 
 # =========================
-# DATA GAMBAR (TAMBAHAN)
+# DATA GAMBAR
 # =========================
 data_gambar = {
     "brosur": "data/gambar1.PNG",
@@ -91,7 +90,6 @@ for chat in st.session_state.chat_history:
 
 if st.sidebar.button("🗑️ Clear Chat"):
     st.session_state.chat_history = []
-    st.session_state.last_images = []  # 🔥 tambahin ini
     st.rerun()
 
 # =========================
@@ -139,22 +137,18 @@ def text_to_speech(text):
     return tmp_file.name
 
 # =========================
-# TAMPILKAN CHAT
+# TAMPILKAN CHAT + GAMBAR
 # =========================
-# =========================
-# TAMPILKAN GAMBAR TERAKHIR
-# =========================
-for path, caption in st.session_state.last_images:
-    st.image(path, caption=caption)
-
 for chat in st.session_state.chat_history:
     if chat["role"] == "user":
         st.markdown(f'<div class="user-bubble">{chat["message"]}</div>', unsafe_allow_html=True)
     else:
         st.markdown(f'<div class="ai-bubble">{chat["message"]}</div>', unsafe_allow_html=True)
 
-if "last_images" not in st.session_state:
-    st.session_state.last_images = []
+        # tampilkan gambar kalau ada
+        if "images" in chat:
+            for path, caption in chat["images"]:
+                st.image(path, caption=caption)
 
 # =========================
 # INPUT
@@ -180,22 +174,17 @@ if st.button("Kirim"):
     try:
         # simpan user
         st.session_state.chat_history.append({
-            "role": "ai",
-            "message": ai_reply,
-            "images": images_found
+            "role": "user",
+            "message": prompt_user
         })
 
-
         # =========================
-        # CEK GAMBAR DULU 🔥
+        # CEK GAMBAR
         # =========================
         images_found = []
-
         for keyword, path in data_gambar.items():
             if keyword in prompt_user.lower():
-                 images_found.append((path, keyword))
-
-
+                images_found.append((path, keyword))
 
         # =========================
         # DATA SEKOLAH
@@ -211,25 +200,10 @@ Jawab dengan jelas dan singkat.
 
 Data sekolah:
 {data_sekolah}
+
+Pertanyaan:
+{prompt_user}
 """
-
-        for chat in st.session_state.chat_history:
-            if chat["role"] == "user":
-                st.markdown(
-                    f'<div class="user-bubble">{chat["message"]}</div>',
-                    unsafe_allow_html=True
-                )
-        else:
-            st.markdown(
-                f'<div class="ai-bubble">{chat["message"]}</div>',
-                unsafe_allow_html=True
-            )
-
-        # 🔥 tampilkan gambar kalau ada
-        if "images" in chat:
-            for path, caption in chat["images"]:
-                st.image(path, caption=caption)
-
 
         # =========================
         # MODEL
@@ -241,13 +215,11 @@ Data sekolah:
 
         ai_reply = getattr(response, "text", "Tidak ada respon dari AI")
 
-        # tampilkan
-        st.markdown(f'<div class="ai-bubble">{ai_reply}</div>', unsafe_allow_html=True)
-
-        # simpan AI
+        # simpan AI + gambar
         st.session_state.chat_history.append({
             "role": "ai",
-            "message": ai_reply
+            "message": ai_reply,
+            "images": images_found
         })
 
         # VOICE
