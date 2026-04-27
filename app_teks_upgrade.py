@@ -48,7 +48,7 @@ body { background-color: #fff1f2; }
 # =========================
 col1, col2, col3 = st.columns([1,2,1])
 with col2:
-    st.image("oel.png")
+    st.image("OEL60.png")
 
 st.title("AI Chat Sekolah ORA et LABORA")
 st.caption("Dengan Memory + Voice + Data Sekolah")
