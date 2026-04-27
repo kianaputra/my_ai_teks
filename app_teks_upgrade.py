@@ -46,11 +46,18 @@ body { background-color: #fff1f2; }
 # =========================
 # TITLE
 # =========================
-
 st.image("oel60plus.PNG")
-
 st.title("AI Chat Sekolah ORA et LABORA")
 st.caption("Dengan Memory + Voice + Data Sekolah")
+
+# =========================
+# DATA GAMBAR (TAMBAHAN)
+# =========================
+data_gambar = {
+    "psb 2026": "data/gambar1.png",
+    "psb 2026-2027": "data/gambar1.png",
+    "jadwal sekolah": "data/jadwal.png"
+}
 
 # =========================
 # API KEY
@@ -138,16 +145,13 @@ for chat in st.session_state.chat_history:
     else:
         st.markdown(f'<div class="ai-bubble">{chat["message"]}</div>', unsafe_allow_html=True)
 
-
-
 # =========================
 # INPUT
 # =========================
 MAX_CHAR = 500
-prompt_user = st.text_area("ketik apa yang mau kamu tanya:", height=100)
+prompt_user = st.text_area("Ketik apa yang mau kamu tanya:", height=100)
 char_count = len(prompt_user)
 st.caption(f"{char_count}/{MAX_CHAR} karakter")
-
 
 # =========================
 # BUTTON
@@ -170,7 +174,14 @@ if st.button("Kirim"):
         })
 
         # =========================
-        # DATA SEKOLAH (dibatasi)
+        # CEK GAMBAR DULU 🔥
+        # =========================
+        for keyword, path in data_gambar.items():
+            if keyword in prompt_user.lower():
+                st.image(path, caption=keyword)
+
+        # =========================
+        # DATA SEKOLAH
         # =========================
         data_sekolah = load_all_data()[:3000]
 
@@ -185,7 +196,6 @@ Data sekolah:
 {data_sekolah}
 """
 
-        # history (2 terakhir biar ringan)
         for chat in st.session_state.chat_history[-2:]:
             if chat["role"] == "user":
                 context += f"User: {chat['message']}\n"
@@ -193,7 +203,7 @@ Data sekolah:
                 context += f"AI: {chat['message']}\n"
 
         # =========================
-        # MODEL (FIX HEMAT)
+        # MODEL
         # =========================
         model = genai.GenerativeModel("gemini-2.5-flash")
 
@@ -202,7 +212,7 @@ Data sekolah:
 
         ai_reply = getattr(response, "text", "Tidak ada respon dari AI")
 
-        # tampilkan langsung (biar tidak hilang)
+        # tampilkan
         st.markdown(f'<div class="ai-bubble">{ai_reply}</div>', unsafe_allow_html=True)
 
         # simpan AI
