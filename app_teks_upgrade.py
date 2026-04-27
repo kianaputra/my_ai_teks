@@ -91,6 +91,7 @@ for chat in st.session_state.chat_history:
 
 if st.sidebar.button("🗑️ Clear Chat"):
     st.session_state.chat_history = []
+    st.session_state.last_images = []  # 🔥 tambahin ini
     st.rerun()
 
 # =========================
