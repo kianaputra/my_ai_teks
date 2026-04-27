@@ -142,7 +142,7 @@ for chat in st.session_state.chat_history:
 # INPUT
 # =========================
 MAX_CHAR = 500
-prompt_user = st.text_area("Ketik pesan kamu:", height=100)
+prompt_user = st.text_area("ketik apa yang mau kamu tanya:", height=100)
 char_count = len(prompt_user)
 st.caption(f"{char_count}/{MAX_CHAR} karakter")
 
