@@ -159,18 +159,19 @@ st.caption(f"{char_count}/{MAX_CHAR} karakter")
 # =========================
 # LOGIC (INI BAGIAN PENTING)
 # =========================
-if user_input:
+query = st.text_area("Ketik pertanyaan kamu:", height=100)
+
+if query.strip():
     found = False
 
     for keyword, path in data_gambar.items():
-        if keyword in user_input.lower():
+        if keyword in query.lower():
             st.image(path, caption=keyword)
             st.write(f"Menampilkan informasi: {keyword}")
             found = True
 
     if not found:
         st.write("Data tidak ditemukan")
-
 # =========================
 # BUTTON
 # =========================
