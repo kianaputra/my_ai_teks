@@ -147,15 +147,6 @@ data_gambar = {
     "psb 2026-2027": "data/gambar1.png",
     "jadwal sekolah": "data/jadwal.png"
 }
-
-# =========================
-# INPUT
-# =========================
-MAX_CHAR = 500
-prompt_user = st.text_area("ketik apa yang mau kamu tanya:", height=100)
-char_count = len(prompt_user)
-st.caption(f"{char_count}/{MAX_CHAR} karakter")
-
 # =========================
 # LOGIC (INI BAGIAN PENTING)
 # =========================
@@ -170,6 +161,15 @@ if user_input:
 
     if not found:
         st.write("Data tidak ditemukan")
+# =========================
+# INPUT
+# =========================
+MAX_CHAR = 500
+prompt_user = st.text_area("ketik apa yang mau kamu tanya:", height=100)
+char_count = len(prompt_user)
+st.caption(f"{char_count}/{MAX_CHAR} karakter")
+
+
 
 # =========================
 # BUTTON
