@@ -148,6 +148,11 @@ data_gambar = {
     "jadwal sekolah": "data/jadwal.png"
 }
 # =========================
+# INPUT USER
+# =========================
+user_input = st.text_input("Tanya sesuatu...")
+
+# =========================
 # LOGIC (INI BAGIAN PENTING)
 # =========================
 if user_input:
