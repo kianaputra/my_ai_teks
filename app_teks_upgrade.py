@@ -47,7 +47,7 @@ body { background-color: #fff1f2; }
 # TITLE
 # =========================
 
-st.image("OEL60.PNG")
+st.image("oel60plus.PNG")
 
 st.title("AI Chat Sekolah ORA et LABORA")
 st.caption("Dengan Memory + Voice + Data Sekolah")
