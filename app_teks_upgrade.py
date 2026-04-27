@@ -54,8 +54,9 @@ st.caption("Dengan Memory + Voice + Data Sekolah")
 # DATA GAMBAR (TAMBAHAN)
 # =========================
 data_gambar = {
-    "psb 2026": "data/gambar1.png",
-    "psb 2026-2027": "data/gambar1.png",
+    "brosur": "data/gambar1.PNG",
+    "psb 2026": "data/gambar1.PNG",
+    "psb 2026-2027": "data/gambar1.PNG",
     "jadwal sekolah": "data/jadwal.png"
 }
 
