@@ -180,18 +180,21 @@ if st.button("Kirim"):
     try:
         # simpan user
         st.session_state.chat_history.append({
-            "role": "user",
-            "message": prompt_user
+            "role": "ai",
+            "message": ai_reply,
+            "images": images_found
         })
+
 
         # =========================
         # CEK GAMBAR DULU 🔥
         # =========================
-        st.session_state.last_images = []
+        images_found = []
 
         for keyword, path in data_gambar.items():
             if keyword in prompt_user.lower():
-                 st.session_state.last_images.append((path, keyword))
+                 images_found.append((path, keyword))
+
 
 
         # =========================
@@ -210,11 +213,23 @@ Data sekolah:
 {data_sekolah}
 """
 
-        for chat in st.session_state.chat_history[-2:]:
+        for chat in st.session_state.chat_history:
             if chat["role"] == "user":
-                context += f"User: {chat['message']}\n"
-            else:
-                context += f"AI: {chat['message']}\n"
+                st.markdown(
+                    f'<div class="user-bubble">{chat["message"]}</div>',
+                    unsafe_allow_html=True
+                )
+        else:
+            st.markdown(
+                f'<div class="ai-bubble">{chat["message"]}</div>',
+                unsafe_allow_html=True
+            )
+
+        # 🔥 tampilkan gambar kalau ada
+        if "images" in chat:
+            for path, caption in chat["images"]:
+                st.image(path, caption=caption)
+
 
         # =========================
         # MODEL
