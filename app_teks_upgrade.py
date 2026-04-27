@@ -141,30 +141,14 @@ for chat in st.session_state.chat_history:
 
 
 # =========================
-# DATA GAMBAR (INI TARUH DI ATAS)
+# INPUT
 # =========================
-data_gambar = {
-    "psb 2026-2027": "data/gambar1.png",
-    "jadwal sekolah": "data/jadwal.png"
-}
+MAX_CHAR = 500
+prompt_user = st.text_area("ketik apa yang mau kamu tanya:", height=100)
+char_count = len(prompt_user)
+st.caption(f"{char_count}/{MAX_CHAR} karakter")
 
 
-# =========================
-# LOGIC (INI BAGIAN PENTING)
-# =========================
-query = st.text_area("Ketik pertanyaan kamu:", height=100)
-
-if query.strip():
-    found = False
-
-    for keyword, path in data_gambar.items():
-        if keyword in query.lower():
-            st.image(path, caption=keyword)
-            st.write(f"Menampilkan informasi: {keyword}")
-            found = True
-
-    if not found:
-        st.write("Data tidak ditemukan")
 # =========================
 # BUTTON
 # =========================
