@@ -46,8 +46,7 @@ body { background-color: #fff1f2; }
 # =========================
 # TITLE
 # =========================
-col1, col2, col3 = st.columns([1,2,1])
-with col2:
+
     st.image("OEL60.png")
 
 st.title("AI Chat Sekolah ORA et LABORA")
