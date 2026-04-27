@@ -138,6 +138,16 @@ for chat in st.session_state.chat_history:
     else:
         st.markdown(f'<div class="ai-bubble">{chat["message"]}</div>', unsafe_allow_html=True)
 
+
+
+# =========================
+# DATA GAMBAR (INI TARUH DI ATAS)
+# =========================
+data_gambar = {
+    "psb 2026-2027": "data/gambar1.png",
+    "jadwal sekolah": "data/jadwal.png"
+}
+
 # =========================
 # INPUT
 # =========================
@@ -146,28 +156,20 @@ prompt_user = st.text_area("ketik apa yang mau kamu tanya:", height=100)
 char_count = len(prompt_user)
 st.caption(f"{char_count}/{MAX_CHAR} karakter")
 
-
-#=============================
-# DATA GAMBAR
-#=============================
-
-data_gambar = {
-    "brosur psb 2026-2027": "data/gambar1.png",
-    "jadwal sekolah": "data/jadwal.png"
-}
-
-user_input = st.text_input("Cari info...")
-
+# =========================
+# LOGIC (INI BAGIAN PENTING)
+# =========================
 if user_input:
     found = False
+
     for keyword, path in data_gambar.items():
         if keyword in user_input.lower():
             st.image(path, caption=keyword)
+            st.write(f"Menampilkan informasi: {keyword}")
             found = True
 
     if not found:
         st.write("Data tidak ditemukan")
-
 
 # =========================
 # BUTTON
