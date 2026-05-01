@@ -3,6 +3,7 @@ import google.generativeai as genai
 from gtts import gTTS
 import os
 import tempfile
+import pandas as pd
 
 from pypdf import PdfReader
 import docx
@@ -93,37 +94,55 @@ if st.sidebar.button("🗑️ Clear Chat"):
     st.rerun()
 
 # =========================
-# LOAD DATA
+# LOAD DATA (LOCAL + GOOGLE SHEET)
 # =========================
-@st.cache_data
+@st.cache_data(ttl=60)
 def load_all_data(folder_path="data"):
     all_text = ""
 
-    if not os.path.exists(folder_path):
-        return "Data tidak ditemukan."
+    # =========================
+    # 1. LOAD FILE LOKAL
+    # =========================
+    if os.path.exists(folder_path):
+        for filename in os.listdir(folder_path):
+            file_path = os.path.join(folder_path, filename)
 
-    for filename in os.listdir(folder_path):
-        file_path = os.path.join(folder_path, filename)
+            try:
+                if filename.endswith(".txt"):
+                    with open(file_path, "r", encoding="utf-8") as f:
+                        all_text += f.read() + "\n\n"
 
-        try:
-            if filename.endswith(".txt"):
-                with open(file_path, "r", encoding="utf-8") as f:
-                    all_text += f.read() + "\n\n"
+                elif filename.endswith(".pdf"):
+                    reader = PdfReader(file_path)
+                    for page in reader.pages:
+                        text = page.extract_text()
+                        if text:
+                            all_text += text + "\n\n"
 
-            elif filename.endswith(".pdf"):
-                reader = PdfReader(file_path)
-                for page in reader.pages:
-                    text = page.extract_text()
-                    if text:
-                        all_text += text + "\n\n"
+                elif filename.endswith(".docx"):
+                    doc = docx.Document(file_path)
+                    for para in doc.paragraphs:
+                        all_text += para.text + "\n\n"
 
-            elif filename.endswith(".docx"):
-                doc = docx.Document(file_path)
-                for para in doc.paragraphs:
-                    all_text += para.text + "\n\n"
+            except:
+                all_text += f"(Gagal baca {filename})\n"
 
-        except:
-            all_text += f"(Gagal baca {filename})\n"
+    # =========================
+    # 2. LOAD GOOGLE SHEET
+    # =========================
+    try:
+        sheet_url = "https://docs.google.com/spreadsheets/d/1suSM7789E8zsoPsb9YH0G1BIoKxi3nci02dLm5xBW2g/export?format=csv"
+        
+        df = pd.read_csv(sheet_url)
+
+        all_text += "\n\n=== DATA GOOGLE SHEET ===\n\n"
+
+        for _, row in df.iterrows():
+            row_text = " | ".join([f"{col}: {row[col]}" for col in df.columns])
+            all_text += row_text + "\n"
+
+    except Exception as e:
+        all_text += f"\n(Gagal load Google Sheet: {e})\n"
 
     return all_text
 
