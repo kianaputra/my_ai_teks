@@ -131,7 +131,7 @@ def load_all_data(folder_path="data"):
     # 2. LOAD GOOGLE SHEET
     # =========================
     try:
-        sheet_url = "https://docs.google.com/spreadsheets/d/1suSM7789E8zsoPsb9YH0G1BIoKxi3nci02dLm5xBW2g/export?format=csv&gid=XXXX"
+        sheet_url = "https://docs.google.com/spreadsheets/d/1suSM7789E8zsoPsb9YH0G1BIoKxi3nci02dLm5xBW2g/export?format=csv
         
         df = pd.read_csv(sheet_url)
 
