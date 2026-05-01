@@ -129,7 +129,8 @@ def load_all_data(folder_path="data"):
 
    # =========================
    # 2. LOAD GOOGLE SHEET
-# =========================
+   # =========================
+try:
 sheet_urls = [ 
         # FILE 1 (2 sheet)
         "https://docs.google.com/spreadsheets/d/1suSM7789E8zsoPsb9YH0G1BIoKxi3nci02dLm5xBW2g/export?format=csv&gid=0",
