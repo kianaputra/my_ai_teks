@@ -127,30 +127,35 @@ def load_all_data(folder_path="data"):
             except:
                 all_text += f"(Gagal baca {filename})\n"
 
-    # =========================
-    # 2. LOAD GOOGLE SHEET
-    # =========================
-    try:
-        sheet_url =[ 
-            "https://docs.google.com/spreadsheets/d/1suSM7789E8zsoPsb9YH0G1BIoKxi3nci02dLm5xBW2g/export?format=csv&gid=0",
-            "https://docs.google.com/spreadsheets/d/1suSM7789E8zsoPsb9YH0G1BIoKxi3nci02dLm5xBW2g/export?format=csv&gid=1368700838",
+   # =========================
+# 2. LOAD GOOGLE SHEET
+# =========================
+try:
+    sheet_urls = [ 
+        # FILE 1 (2 sheet)
+        "https://docs.google.com/spreadsheets/d/1suSM7789E8zsoPsb9YH0G1BIoKxi3nci02dLm5xBW2g/export?format=csv&gid=0",
+        "https://docs.google.com/spreadsheets/d/1suSM7789E8zsoPsb9YH0G1BIoKxi3nci02dLm5xBW2g/export?format=csv&gid=1368700838",
 
-            "https://docs.google.com/spreadsheets/d/1FY9zao3G8oHuEttMAxKkpfIC2aET8BS_w3IuWgMfY14/export?format=csv"
-        ]
-            
-        
-        df = pd.read_csv(sheet_url)
+        # FILE 2 (1 sheet)
+        "https://docs.google.com/spreadsheets/d/1FY9zao3G8oHuEttMAxKkpfIC2aET8BS_w3IuWgMfY14/export?format=csv"
+    ]
 
-        all_text += "\n\n=== DATA GOOGLE SHEET ===\n\n"
+    for url in sheet_urls:
+        try:
+            df = pd.read_csv(url)
 
-        for _, row in df.iterrows():
-            row_text = " | ".join([f"{col}: {row[col]}" for col in df.columns])
-            all_text += row_text + "\n"
+            all_text += "\n\n=== DATA GOOGLE SHEET ===\n\n"
 
-    except Exception as e:
-        all_text += f"\n(Gagal load Google Sheet: {e})\n"
+            for _, row in df.iterrows():
+                row_text = " | ".join([f"{col}: {row[col]}" for col in df.columns])
+                all_text += row_text + "\n"
 
-    return all_text
+        except Exception as e:
+            all_text += f"\n(Gagal load salah satu sheet: {e})\n"
+
+except Exception as e:
+    all_text += f"\n(Gagal load Google Sheet: {e})\n"
+
 
 # =========================
 # TEXT TO SPEECH
