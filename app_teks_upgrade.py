@@ -133,7 +133,7 @@ def load_all_data(folder_path="data"):
     try:
         sheet_url =[ 
             "https://docs.google.com/spreadsheets/d/1suSM7789E8zsoPsb9YH0G1BIoKxi3nci02dLm5xBW2g/export?format=csv&gid=0",
-            "https://docs.google.com/spreadsheets/d/1suSM7789E8zsoPsb9YH0G1BIoKxi3nci02dLm5xBW2g/export?format=csv&gid=1368700838"
+            "https://docs.google.com/spreadsheets/d/1suSM7789E8zsoPsb9YH0G1BIoKxi3nci02dLm5xBW2g/export?format=csv&gid=1368700838",
 
             "https://docs.google.com/spreadsheets/d/1FY9zao3G8oHuEttMAxKkpfIC2aET8BS_w3IuWgMfY14/export?format=csv"
         ]
