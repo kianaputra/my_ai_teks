@@ -111,7 +111,6 @@ st.image("1.png", width=450,)
 st.markdown("""
 <div>
     <div class="title">AI Chat Sekolah ORA et LABORA</div>
-    <div class="subtitle">Dengan Memory + Voice + Data Sekolah</div>
 </div>
 """, unsafe_allow_html=True)
 
