@@ -104,8 +104,19 @@ footer {visibility: hidden;}
 # =========================
 # TITLE
 # =========================
-st.image("oel60plus.PNG")
-st.title("AI Chat Sekolah ORA et LABORA")
+st.markdown('<div class="banner">', unsafe_allow_html=True)
+
+st.image("oel60plus.PNG", width=90)
+
+st.markdown("""
+<div>
+    <div class="title">AI Chat Sekolah ORA et LABORA</div>
+    <div class="subtitle">Dengan Memory + Voice + Data Sekolah</div>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)
+
 
 # =========================
 # DATA GAMBAR
