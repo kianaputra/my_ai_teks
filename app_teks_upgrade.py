@@ -22,27 +22,82 @@ st.set_page_config(
 # =========================
 st.markdown("""
 <style>
-body { background-color: #fff1f2; }
+
+/* Hilangkan padding atas biar naik */
 .block-container {
-    padding-top: 3rem !important;
-    padding-bottom:0rem;
+    padding-top: 1rem !important;
+    padding-bottom: 0rem;
 }
+
+/* Background clean */
+body {
+    background-color: #f5f7fb;
+}
+
+/* Banner */
+.banner {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: -20px;
+    margin-bottom: 10px;
+}
+
+/* Title */
+.title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1f2d3d;
+}
+
+/* Subtitle */
+.subtitle {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* User bubble */
 .user-bubble {
-    background-color: #fecdd3;
+    background-color: #2563eb;
+    color: white;
     padding: 10px 15px;
     border-radius: 15px;
-    margin: 5px 0;
+    margin: 8px 0;
     max-width: 70%;
     margin-left: auto;
 }
 
+/* AI bubble */
 .ai-bubble {
-    background-color: #ffe4e6;
+    background-color: white;
+    color: #111;
     padding: 10px 15px;
     border-radius: 15px;
-    margin: 5px 0;
+    margin: 8px 0;
     max-width: 70%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
+
+/* Input box */
+textarea {
+    border-radius: 12px !important;
+}
+
+/* Button */
+.stButton>button {
+    border-radius: 10px;
+    background-color: #2563eb;
+    color: white;
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background-color: #ffffff;
+}
+
+/* Hilangkan footer */
+footer {visibility: hidden;}
+
 </style>
 """, unsafe_allow_html=True)
 
