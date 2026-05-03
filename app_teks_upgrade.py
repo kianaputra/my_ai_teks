@@ -25,7 +25,7 @@ st.markdown("""
 
 /* Hilangkan padding atas biar naik */
 .block-container {
-    padding-top: 4rem !important;
+    padding-top: 3rem !important;
     padding-bottom: 0rem;
 }
 
