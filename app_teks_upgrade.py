@@ -275,47 +275,39 @@ for chat in st.session_state.chat_history:
 # INPUT
 # =========================
 MAX_CHAR = 500
-prompt_user = st.text_area("Ketik apa yang mau kamu tanya:", height=100)
-char_count = len(prompt_user)
-st.caption(f"{char_count}/{MAX_CHAR} karakter")
+prompt_user = st.chat_input("Tulis pertanyaan kamu...")
 
-# =========================
-# BUTTON
-# =========================
-if st.button("Kirim"):
+if prompt_user:
 
-    if not prompt_user.strip():
-        st.warning("Isi dulu ya")
+    # ⛔ CEGAH DOUBLE
+    if "last_input" in st.session_state and st.session_state.last_input == prompt_user:
         st.stop()
 
-    if char_count > MAX_CHAR:
-        st.error("Terlalu panjang!")
-        st.stop()
+    st.session_state.last_input = prompt_user
 
-    try:
-        # simpan user
-        st.session_state.chat_history.append({
-            "role": "user",
-            "message": prompt_user
-        })
+    # simpan user
+    st.session_state.chat_history.append({
+        "role": "user",
+        "message": prompt_user
+    })
 
-        # =========================
-        # CEK GAMBAR
-        # =========================
-        images_found = []
-        for keyword, path in data_gambar.items():
-            if keyword in prompt_user.lower():
-                images_found.append((path, keyword))
+    # =========================
+    # CEK GAMBAR
+    # =========================
+    images_found = []
+    for keyword, path in data_gambar.items():
+        if keyword in prompt_user.lower():
+            images_found.append((path, keyword))
 
-        # =========================
-        # DATA SEKOLAH
-        # =========================
-        data_sekolah = load_all_data()[:3000]
+    # =========================
+    # DATA SEKOLAH
+    # =========================
+    data_sekolah = load_all_data()[:3000]
 
-        # =========================
-        # CONTEXT
-        # =========================
-        context = f"""
+    # =========================
+    # CONTEXT
+    # =========================
+    context = f"""
 Kamu adalah AI resmi Sekolah ORA et LABORA.
 Jawab dengan jelas dan singkat.
 
@@ -326,25 +318,24 @@ Pertanyaan:
 {prompt_user}
 """
 
-        # =========================
-        # MODEL
-        # =========================
-        model = genai.GenerativeModel("gemini-2.5-flash")
+    # =========================
+    # MODEL
+    # =========================
+    model = genai.GenerativeModel("gemini-2.5-flash")
 
-        with st.spinner("🤖 AI sedang mengetik..."):
-            response = model.generate_content(context)
+    with st.spinner("🤖 AI sedang mengetik..."):
+        response = model.generate_content(context)
 
-        ai_reply = getattr(response, "text", "Tidak ada respon dari AI")
+    ai_reply = getattr(response, "text", "Tidak ada respon dari AI")
 
-        # simpan dulu ke history (INI PENTING)
-        st.session_state.chat_history.append({
-            "role": "ai",
-            "message": ai_reply,
-            "images": images_found
-        })
+    # simpan AI
+    st.session_state.chat_history.append({
+        "role": "ai",
+        "message": ai_reply,
+        "images": images_found
+    })
 
-        # baru rerun TANPA render manual lagi
-        st.rerun()
+    st.rerun()
 
         # VOICE
         audio_file = text_to_speech(ai_reply)
