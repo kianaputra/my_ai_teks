@@ -338,10 +338,10 @@ Pertanyaan:
     st.rerun()
 
         # VOICE
-        audio_file = text_to_speech(ai_reply)
-        st.audio(audio_file)
+    audio_file = text_to_speech(ai_reply)
+    st.audio(audio_file)
 
-        st.rerun()
+    st.rerun()
 
     except Exception as e:
         st.error(f"Error: {e}")
