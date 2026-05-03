@@ -23,8 +23,8 @@ st.set_page_config(
 st.markdown("""
 <style>
 body { background-color: #fff1f2; }
-.banner {
-    margin-top: 250px;
+.css-18e3th9 {
+    padding-top: 0rem !important;
 }
 .user-bubble {
     background-color: #fecdd3;
