@@ -239,9 +239,9 @@ def text_to_speech(text):
 # =========================
 for chat in st.session_state.chat_history:
     if chat["role"] == "user":
-        st.markdown(f'<div class="user-bubble">{chat["message"]}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="user-bubble">🧑{chat["message"]}</div>', unsafe_allow_html=True)
     else:
-        st.markdown(f'<div class="ai-bubble">{chat["message"]}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="ai-bubble">🤖{chat["message"]}</div>', unsafe_allow_html=True)
 
         # tampilkan gambar kalau ada
         if "images" in chat:
