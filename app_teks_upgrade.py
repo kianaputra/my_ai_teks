@@ -318,30 +318,26 @@ Pertanyaan:
 {prompt_user}
 """
 
-    # =========================
-    # MODEL
-    # =========================
-    model = genai.GenerativeModel("gemini-2.5-flash")
+# =========================
+# MODEL
+# =========================
+model = genai.GenerativeModel("gemini-2.5-flash")
 
-    with st.spinner("🤖 AI sedang mengetik..."):
-        response = model.generate_content(context)
+with st.spinner("🤖 AI sedang mengetik..."):
+    response = model.generate_content(context)
 
-    ai_reply = getattr(response, "text", "Tidak ada respon dari AI")
+ai_reply = getattr(response, "text", "Tidak ada respon dari AI")
 
-    # simpan AI
-    st.session_state.chat_history.append({
-        "role": "ai",
-        "message": ai_reply,
-        "images": images_found
-    })
+# simpan AI
+st.session_state.chat_history.append({
+    "role": "ai",
+    "message": ai_reply,
+    "images": images_found
+})
 
-    st.rerun()
+# 🔊 VOICE (HARUS SEBELUM RERUN)
+audio_file = text_to_speech(ai_reply)
+st.audio(audio_file)
 
-        # VOICE
-    audio_file = text_to_speech(ai_reply)
-    st.audio(audio_file)
-
-    st.rerun()
-
-except Exception as e:
-    st.error(f"Error: {e}")
+# 🔁 RERUN PALING AKHIR
+st.rerun()
