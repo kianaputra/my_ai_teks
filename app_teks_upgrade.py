@@ -24,7 +24,7 @@ st.markdown("""
 <style>
 body { background-color: #fff1f2; }
 .banner {
-    margin-top: 20px;
+    margin-top: 250px;
 }
 .user-bubble {
     background-color: #fecdd3;
