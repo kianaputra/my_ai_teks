@@ -150,7 +150,14 @@ if "chat_history" not in st.session_state:
 # =========================
 # SIDEBAR
 # =========================
-st.sidebar.title("💬 Chat History")
+st.sidebar.title("📚 Menu")
+
+menu = st.sidebar.radio("Pilih Halaman", [
+    "💬 Chat AI",
+    "📊 Dashboard",
+    "🛍️ Produk",
+    "🏫 Data Sekolah"
+])
 
 for chat in st.session_state.chat_history:
     role = "🧑" if chat["role"] == "user" else "🤖"
