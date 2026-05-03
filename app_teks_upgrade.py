@@ -12,12 +12,6 @@ import docx
 # CONFIG
 # =========================
 st.set_page_config(
-# =========================
-# SESSION INIT (WAJIB ADA)
-# =========================
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
-
     page_title="AI Sekolah ORA et LABORA",
     page_icon="oel.png",
     layout="wide"
@@ -107,7 +101,6 @@ footer {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
 
-
 # =========================
 # TITLE
 # =========================
@@ -151,35 +144,13 @@ else:
 # =========================
 # SESSION
 # =========================
-for chat in st.session_state.chat_history:
-    if chat["role"] == "user":
-        col1, col2 = st.columns([8,1])
-        with col1:
-            st.markdown(f'<div class="user-bubble">{chat["message"]}</div>', unsafe_allow_html=True)
-        with col2:
-            st.write("🧑")
-
-    else:
-        col1, col2 = st.columns([1,8])
-        with col1:
-            st.image("oel.png", width=35)
-        with col2:
-            st.markdown(f'<div class="ai-bubble">{chat["message"]}</div>', unsafe_allow_html=True)
-
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
 
 # =========================
 # SIDEBAR
 # =========================
-st.sidebar.title("📚 Menu")
-
-menu = st.sidebar.radio("Pilih Halaman", [
-    "💬 Chat AI",
-    "📊 Dashboard",
-    "🛍️ Produk",
-    "🏫 Data Sekolah"
-])
-mode = st.sidebar.toggle("🌙 Dark Mode")
-
+st.sidebar.title("💬 Chat History")
 
 for chat in st.session_state.chat_history:
     role = "🧑" if chat["role"] == "user" else "🤖"
@@ -281,39 +252,47 @@ for chat in st.session_state.chat_history:
 # INPUT
 # =========================
 MAX_CHAR = 500
-prompt_user = st.chat_input("Tulis pertanyaan kamu...")
+prompt_user = st.text_area("Ketik apa yang mau kamu tanya:", height=100)
+char_count = len(prompt_user)
+st.caption(f"{char_count}/{MAX_CHAR} karakter")
 
-if prompt_user:
+# =========================
+# BUTTON
+# =========================
+if st.button("Kirim"):
 
-    # ⛔ CEGAH DOUBLE
-    if "last_input" in st.session_state and st.session_state.last_input == prompt_user:
+    if not prompt_user.strip():
+        st.warning("Isi dulu ya")
         st.stop()
 
-    st.session_state.last_input = prompt_user
+    if char_count > MAX_CHAR:
+        st.error("Terlalu panjang!")
+        st.stop()
 
-    # simpan user
-    st.session_state.chat_history.append({
-        "role": "user",
-        "message": prompt_user
-    })
+    try:
+        # simpan user
+        st.session_state.chat_history.append({
+            "role": "user",
+            "message": prompt_user
+        })
 
-    # =========================
-    # CEK GAMBAR
-    # =========================
-    images_found = []
-    for keyword, path in data_gambar.items():
-        if keyword in prompt_user.lower():
-            images_found.append((path, keyword))
+        # =========================
+        # CEK GAMBAR
+        # =========================
+        images_found = []
+        for keyword, path in data_gambar.items():
+            if keyword in prompt_user.lower():
+                images_found.append((path, keyword))
 
-    # =========================
-    # DATA SEKOLAH
-    # =========================
-    data_sekolah = load_all_data()[:3000]
+        # =========================
+        # DATA SEKOLAH
+        # =========================
+        data_sekolah = load_all_data()[:3000]
 
-    # =========================
-    # CONTEXT
-    # =========================
-    context = f"""
+        # =========================
+        # CONTEXT
+        # =========================
+        context = f"""
 Kamu adalah AI resmi Sekolah ORA et LABORA.
 Jawab dengan jelas dan singkat.
 
@@ -324,26 +303,28 @@ Pertanyaan:
 {prompt_user}
 """
 
-# =========================
-# MODEL
-# =========================
-model = genai.GenerativeModel("gemini-2.5-flash")
+        # =========================
+        # MODEL
+        # =========================
+        model = genai.GenerativeModel("gemini-2.5-flash")
 
-with st.spinner("🤖 AI sedang mengetik..."):
-    response = model.generate_content(context)
+        with st.spinner("AI sedang berpikir..."):
+            response = model.generate_content(context)
 
-ai_reply = getattr(response, "text", "Tidak ada respon dari AI")
+        ai_reply = getattr(response, "text", "Tidak ada respon dari AI")
 
-# simpan AI
-st.session_state.chat_history.append({
-    "role": "ai",
-    "message": ai_reply,
-    "images": images_found
-})
+        # simpan AI + gambar
+        st.session_state.chat_history.append({
+            "role": "ai",
+            "message": ai_reply,
+            "images": images_found
+        })
 
-# 🔊 VOICE (HARUS SEBELUM RERUN)
-audio_file = text_to_speech(ai_reply)
-st.audio(audio_file)
+        # VOICE
+        audio_file = text_to_speech(ai_reply)
+        st.audio(audio_file)
 
-# 🔁 RERUN PALING AKHIR
-st.rerun()
+        st.rerun()
+
+    except Exception as e:
+        st.error(f"Error: {e}")
