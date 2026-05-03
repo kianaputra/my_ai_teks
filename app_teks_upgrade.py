@@ -12,6 +12,12 @@ import docx
 # CONFIG
 # =========================
 st.set_page_config(
+# =========================
+# SESSION INIT (WAJIB ADA)
+# =========================
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+
     page_title="AI Sekolah ORA et LABORA",
     page_icon="oel.png",
     layout="wide"
