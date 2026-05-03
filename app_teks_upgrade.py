@@ -23,7 +23,10 @@ st.set_page_config(
 st.markdown("""
 <style>
 body { background-color: #fff1f2; }
-
+.block-container {
+    padding-top: 1rem !important;
+    padding-bottom: 0rem;
+}
 .user-bubble {
     background-color: #fecdd3;
     padding: 10px 15px;
