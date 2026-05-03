@@ -24,8 +24,8 @@ st.markdown("""
 <style>
 body { background-color: #fff1f2; }
 .block-container {
-    padding-top: 0rem !important;
-    padding-bottom: 2rem;
+    padding-top: 1rem !important;
+    padding-bottom:02rem;
 }
 .user-bubble {
     background-color: #fecdd3;
@@ -51,7 +51,6 @@ body { background-color: #fff1f2; }
 # =========================
 st.image("oel60plus.PNG")
 st.title("AI Chat Sekolah ORA et LABORA")
-st.caption("Dengan Memory + Voice + Data Sekolah")
 
 # =========================
 # DATA GAMBAR
