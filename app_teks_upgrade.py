@@ -23,8 +23,9 @@ st.set_page_config(
 st.markdown("""
 <style>
 body { background-color: #fff1f2; }
-.css-18e3th9 {
-    padding-top: 0rem !important;
+.block-container {
+    padding-top: 2rem !important;
+    padding-bottom: 0rem;
 }
 .user-bubble {
     background-color: #fecdd3;
