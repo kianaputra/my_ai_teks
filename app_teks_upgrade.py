@@ -106,7 +106,7 @@ footer {visibility: hidden;}
 # =========================
 st.markdown('<div class="banner">', unsafe_allow_html=True)
 
-st.image("1.png", width=250)
+st.image("1.png", width=500)
 
 st.markdown("""
 <div>
