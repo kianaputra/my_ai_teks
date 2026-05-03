@@ -331,17 +331,20 @@ Pertanyaan:
         # =========================
         model = genai.GenerativeModel("gemini-2.5-flash")
 
-        with st.spinner("AI sedang berpikir..."):
+        with st.spinner("🤖 AI sedang mengetik..."):
             response = model.generate_content(context)
 
         ai_reply = getattr(response, "text", "Tidak ada respon dari AI")
 
-        # simpan AI + gambar
+        # simpan dulu ke history (INI PENTING)
         st.session_state.chat_history.append({
             "role": "ai",
             "message": ai_reply,
             "images": images_found
         })
+
+        # baru rerun TANPA render manual lagi
+        st.rerun()
 
         # VOICE
         audio_file = text_to_speech(ai_reply)
