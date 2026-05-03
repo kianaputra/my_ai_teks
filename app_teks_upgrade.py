@@ -343,5 +343,5 @@ Pertanyaan:
 
     st.rerun()
 
-    except Exception as e:
-        st.error(f"Error: {e}")
+except Exception as e:
+    st.error(f"Error: {e}")
