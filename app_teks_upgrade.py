@@ -25,7 +25,7 @@ st.markdown("""
 body { background-color: #fff1f2; }
 .block-container {
     padding-top: 0rem !important;
-    padding-bottom: 0rem;
+    padding-bottom: 2rem;
 }
 .user-bubble {
     background-color: #fecdd3;
