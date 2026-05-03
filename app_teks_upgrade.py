@@ -158,6 +158,8 @@ menu = st.sidebar.radio("Pilih Halaman", [
     "🛍️ Produk",
     "🏫 Data Sekolah"
 ])
+mode = st.sidebar.toggle("🌙 Dark Mode")
+
 
 for chat in st.session_state.chat_history:
     role = "🧑" if chat["role"] == "user" else "🤖"
