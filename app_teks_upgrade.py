@@ -145,8 +145,21 @@ else:
 # =========================
 # SESSION
 # =========================
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
+for chat in st.session_state.chat_history:
+    if chat["role"] == "user":
+        col1, col2 = st.columns([8,1])
+        with col1:
+            st.markdown(f'<div class="user-bubble">{chat["message"]}</div>', unsafe_allow_html=True)
+        with col2:
+            st.write("🧑")
+
+    else:
+        col1, col2 = st.columns([1,8])
+        with col1:
+            st.image("oel.png", width=35)
+        with col2:
+            st.markdown(f'<div class="ai-bubble">{chat["message"]}</div>', unsafe_allow_html=True)
+
 
 # =========================
 # SIDEBAR
